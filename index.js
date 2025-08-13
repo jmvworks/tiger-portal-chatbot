@@ -24,6 +24,10 @@ app.get('/webhook', (req, res) => {
 
 // Handles messages and postbacks
 app.post('/webhook', (req, res) => {
+  // Added for debugging
+  console.log('--- INCOMING WEBHOOK POST ---');
+  console.log(JSON.stringify(req.body, null, 2));
+
   let body = req.body;
 
   if (body.object === 'page') {
@@ -57,21 +61,24 @@ function handlePostback(sender_psid, received_postback) {
   switch (payload) {
     case 'MENU_OPTION_1':
       response = { "text": "Here is the information for Option 1. It's a great choice!" };
+      callSendAPI(sender_psid, response).then(() => sendBackToMenu(sender_psid));
       break;
     case 'MENU_OPTION_2':
       response = { "text": "You picked Option 2! Here are the details you requested." };
+      callSendAPI(sender_psid, response).then(() => sendBackToMenu(sender_psid));
       break;
     case 'MENU_OPTION_3':
       response = { "text": "Excellent selection. Here is everything you need to know about Option 3." };
+      callSendAPI(sender_psid, response).then(() => sendBackToMenu(sender_psid));
+      break;
+    case 'MAIN_MENU':
+      sendMainMenu(sender_psid);
       break;
     default:
       response = { "text": "Sorry, I didn't understand that selection." };
+      callSendAPI(sender_psid, response);
       break;
   }
-  callSendAPI(sender_psid, response).then(() => {
-    // After sending the unique message, send the "Back to Menu" option
-    sendBackToMenu(sender_psid);
-  });
 }
 
 // Sends the main menu with three options
@@ -107,8 +114,6 @@ function sendBackToMenu(sender_psid) {
             }
         }
     };
-    // The postback for "MAIN_MENU" will be handled by your handlePostback function.
-    // You'll need to add a case for it to call sendMainMenu(sender_psid).
     callSendAPI(sender_psid, messageData);
 }
 
