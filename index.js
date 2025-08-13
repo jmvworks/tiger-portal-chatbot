@@ -127,11 +127,11 @@ function callSendAPI(sender_psid, response) {
   }
 
   // Send the HTTP request to the Messenger Platform
-   axios.post('https://graph.facebook.com/v13.0/me/messages', request_body, {
-      params: { access_token: PAGE_ACCESS_TOKEN }
-  }).then(res => {
-      console.log('Message sent!');
-  }).catch(error => {
-      console.error("Unable to send message:" + error);
-  });
+   axios.post('https://graph.facebook.com/v23.0/me/messages', request_body, {
+     params: { access_token: PAGE_ACCESS_TOKEN }
+ }).then(res => {
+     console.log('Message sent!');
+ }).catch(error => {
+     console.error("Unable to send message:" + error);
+ });
 }
